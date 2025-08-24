@@ -1,6 +1,7 @@
 import java.security.spec.*;
 import javax.crypto.*;
 import javax.crypto.spec.*;
+import java.util.Scanner;
 
 
 /*
@@ -11,7 +12,7 @@ import javax.crypto.spec.*;
 class DESTest {
 
    public static void main(String[] args) {
-
+      Scanner scanner = new java.util.Scanner(System.in);
 
       System.out.println("""
               Remember the order: KEY CYPHER_TEXT CLEAR_TEXT\
@@ -27,6 +28,8 @@ class DESTest {
        System.out.println(" So, the results should be: ");
 
       String [] tests = {"1", "2", "3", "4"};
+
+      boolean exit = false;
 
       for (int i = 0; i < tests.length; i++) {
 
@@ -70,7 +73,7 @@ class DESTest {
                      System.out.println("java JceSunDesTest 1/2");
                      return;
                  }
-             }
+            }
 
             KeySpec ks = new DESKeySpec(theKey);
             SecretKeyFactory kf = SecretKeyFactory.getInstance("DES");
@@ -79,7 +82,7 @@ class DESTest {
             cf.init(Cipher.ENCRYPT_MODE,ky);
 
             byte[] theCph = cf.doFinal(theMsg);
-
+            
             System.out.println("Test case #" + tests[i]);
 
             System.out.println("Key     : "+bytesToHex(theKey));
@@ -92,6 +95,39 @@ class DESTest {
             } else {
                System.out.println("Encryption Failed");
             }
+            
+            while (!exit) {
+               System.out.println("""
+                  Choose what to do next:
+                  
+                  1. Decrypt the cipher text with the same key and verify you get the original clear text
+                  
+                  2. Encrypt the clear text again using AES algorithm and other test vectors""");
+
+               int option = scanner.nextInt();
+
+
+               if (option == 1) {
+                  cf.init(Cipher.DECRYPT_MODE, ky);
+                  byte[] theClear = cf.doFinal(theCph);
+                  System.out.println("Key     : " + bytesToHex(theKey));                  
+                  System.out.println("Cipher text: " + bytesToHex(theCph));
+                  System.out.println("Decrypted text: " + bytesToHex(theClear));
+                  System.out.println("Expected result: " + bytesToHex(theMsg));
+                  
+                  if (bytesToHex(theClear).equals(bytesToHex(theMsg))) {
+                     System.out.println("Decryption OK");
+
+                  } else {
+                     System.out.println("Decryption Failed");
+                  }
+                  exit = true;
+               } else if (option == 2) {
+                  System.out.println("Going to AES test vectors...");
+                  exit = true;                  
+               }
+            }
+            
          } catch (Exception e) {
             e.printStackTrace();
             return;
