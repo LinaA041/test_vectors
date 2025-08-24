@@ -22,6 +22,11 @@ class DESTest {
 
         for (String test : tests) {
             runTestCase(test);
+            runTestCaseAES(test);
+        }
+
+        for (String test : tests) {
+            runTestCaseAES(test);
         }
     }
 
@@ -95,6 +100,79 @@ class DESTest {
             }
 
             System.out.println("------------------------------");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void runTestCaseAES(String testId) {
+        try {
+            byte[] theKey;
+            byte[] theMsg;
+            byte[] theExp;
+            
+            // Key: 128 bits
+            switch (testId) {
+                case "1" -> {
+                    theKey = hexToBytes("10a58869d74be5a374cf867cfb473859");
+                    theMsg = hexToBytes("00000000000000000000000000000000");
+                    theExp = hexToBytes("6d251e6944b051e04eaa6fb4dbf78465");
+                }
+                case "2" -> {
+                    theKey = hexToBytes("da84367f325d42d601b4326964802e8e");
+                    theMsg = hexToBytes("00000000000000000000000000000000");
+                    theExp = hexToBytes("bba071bcb470f8f6586e5d3add18bc66");
+                }
+                case "3" -> {
+                    theKey = hexToBytes("47d6742eefcc0465dc96355e851b64d9");
+                    theMsg = hexToBytes("00000000000000000000000000000000");
+                    theExp = hexToBytes("0306194f666d183624aa230a8b264ae7");
+                }
+                case "4" -> {
+                    theKey = hexToBytes("e234cdca2606b81f29408d5f6da21206");
+                    theMsg = hexToBytes("00000000000000000000000000000000");
+                    theExp = hexToBytes("fff60a4740086b3b9c56195b98d91a7b");
+                }
+                default -> {
+                    System.out.println("Unknown test case: " + testId);
+                    return;
+                }
+            }
+
+            SecretKey ky = new SecretKeySpec(theKey, "AES");
+            Cipher cf = Cipher.getInstance("AES/ECB/NoPadding");
+
+            // --- ENCRYPT ---
+            cf.init(Cipher.ENCRYPT_MODE, ky);
+            byte[] theCph = cf.doFinal(theMsg);
+
+            System.out.println("Test case #" + testId);
+            System.out.println("Key         : " + bytesToHex(theKey));
+            System.out.println("Plaintext   : " + bytesToHex(theMsg));
+            System.out.println("Cipher text : " + bytesToHex(theCph));
+            System.out.println("Expected    : " + bytesToHex(theExp));
+
+            if (bytesToHex(theCph).equalsIgnoreCase(bytesToHex(theExp))) {
+                System.out.println("Encryption OK");
+            } else {
+                System.out.println("Encryption Failed");
+            }
+
+            // --- DECRYPT ---
+            // cf.init(Cipher.DECRYPT_MODE, ky);
+            // byte[] theClear = cf.doFinal(theCph);
+
+            // System.out.println("Decrypted   : " + bytesToHex(theClear));
+            // System.out.println("Expected PT : " + bytesToHex(theMsg));
+
+            // if (bytesToHex(theClear).equalsIgnoreCase(bytesToHex(theMsg))) {
+            //     System.out.println("Decryption OK");
+            // } else {
+            //     System.out.println("Decryption Failed");
+            // }
+
+            // System.out.println("------------------------------");
 
         } catch (Exception e) {
             e.printStackTrace();
