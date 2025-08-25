@@ -1,11 +1,24 @@
 import java.security.spec.*;
+import java.util.Scanner;
 import javax.crypto.*;
 import javax.crypto.spec.*;
+
 
 class DESTest {
 
     public static void main(String[] args) {
-        System.out.println("""
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Please, select the algorithm to test:" +
+                "\n1 - DES" +
+                "\n2 - AES");
+
+        int choice = scanner.nextInt();
+
+        if (choice == 1) {
+
+            System.out.println("""
                 Remember the order: KEY CYPHER_TEXT CLEAR_TEXT
 
                 1. 0101010101010101 20B9E767B2FB1456 0800000000000000
@@ -16,18 +29,37 @@ class DESTest {
 
                 4. 0101010101010101 5E0905517BB59BCF 0000000004000000""");
 
-        System.out.println("\nRunning test vectors...\n");
+            System.out.println("\nRunning test vectors...\n");
 
-        String[] tests = {"1", "2", "3", "4"};
+            String[] tests = {"1", "2", "3", "4"};
 
-        for (String test : tests) {
-            runTestCase(test);
-            runTestCaseAES(test);
+            for (String test : tests) {
+                runTestCase(test);
+                runTestCaseAES(test);
+            }
+
+        } else if (choice == 2) {
+
+            System.out.println("""
+                Remember the order: KEY CLEAR_TEXT CYPHER_TEXT
+
+                1. 10a58869d74be5a374cf867cfb473859 00000000000000000000000000000000 6d251e6944b051e04eaa6fb4dbf78465
+                2. da84367f325d42d601b4326964802e8e 00000000000000000000000000000000 bba071bcb470f8f6586e5d3add18bc66
+                3. 47d6742eefcc0465dc96355e851b64d9 00000000000000000000000000000000 0306194f666d183624aa230a8b264ae7
+                4. e234cdca2606b81f29408d5f6da21206 00000000000000000000000000000000 fff60a4740086b3b9c56195b98d91a7b""");
+
+            String[] tests = {"1", "2", "3", "4"};
+
+            for (String test : tests) {
+                runTestCaseAES(test);
+            }
+
+        } else {
+            System.out.println("Invalid choice. Please select 1 or 2.");
         }
 
-        for (String test : tests) {
-            runTestCaseAES(test);
-        }
+
+
     }
 
     private static void runTestCase(String testId) {
