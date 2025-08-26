@@ -4,7 +4,7 @@ import javax.crypto.*;
 import javax.crypto.spec.*;
 
 
-class DESTest {
+class Andrade_Lopez {
 
     public static void main(String[] args) {
 
@@ -35,7 +35,6 @@ class DESTest {
 
             for (String test : tests) {
                 runTestCase(test);
-                runTestCaseAES(test);
             }
 
         } else if (choice == 2) {
@@ -57,9 +56,7 @@ class DESTest {
         } else {
             System.out.println("Invalid choice. Please select 1 or 2.");
         }
-
-
-
+        scanner.close();
     }
 
     private static void runTestCase(String testId) {
